@@ -1,59 +1,68 @@
 #!/usr/bin/python3
-
 """
-The N queens puzzle is the challenge of placing N non-attacking queens on an N×N chessboard. Write a program that solves the N queens problem.
+Solution to the nqueens problem set
 """
-
-
 import sys
 
-def is_valid(chessboard, row, col, N):
-    # Check if placing a queen at (row, col) is valid
-    for i in range(row):
-        # Check the column
-        if chessboard[i][col] == 'Q':
-            return False
-        # Check upper-left diagonal
-        if abs(col - (row - i)) == abs(col - row) == abs(i - row):
-            return False
-        # Check upper-right diagonal
-        if col + (row - i) < N and chessboard[i][col + (row - i)] == 'Q':
-            return False
-    return True
 
-def place_queens(chessboard, row, N):
-    if row == N:
-        # All queens are successfully placed
-        print_solution(chessboard)
+def backtrack(r, n, cols, pos, neg, board):
+    """
+    backtrack function to find solution
+    """
+    if r == n:
+        res = []
+        for l in range(len(board)):
+            for k in range(len(board[l])):
+                if board[l][k] == 1:
+                    res.append([l, k])
+        print(res)
         return
 
-    for col in range(N):
-        if is_valid(chessboard, row, col, N):
-            chessboard[row][col] = 'Q'  # Place queen
-            place_queens(chessboard, row + 1, N)  # Recur for next row
-            chessboard[row][col] = '.'  # Backtrack
+    for c in range(n):
+        if c in cols or (r + c) in pos or (r - c) in neg:
+            continue
 
-def print_solution(chessboard):
-    # Print the positions of queens in the format [row, col]
-    solution = []
-    for row in range(len(chessboard)):
-        for col in range(len(chessboard[row])):
-            if chessboard[row][col] == 'Q':
-                solution.append([row, col])
-    print(solution)
+        cols.add(c)
+        pos.add(r + c)
+        neg.add(r - c)
+        board[r][c] = 1
 
-def nqueens(N):
-    N = int(N)
-    if N < 4:
-        print("N must be at least 4", file=sys.stderr)
-        sys.exit(1)
+        backtrack(r+1, n, cols, pos, neg, board)
 
-    chessboard = [['.' for _ in range(N)] for _ in range(N)]  # Initialize empty board
-    place_queens(chessboard, 0, N)  # Start placing queens from the first row
+        cols.remove(c)
+        pos.remove(r + c)
+        neg.remove(r - c)
+        board[r][c] = 0
+
+
+def nqueens(n):
+    """
+    Solution to nqueens problem
+    Args:
+        n (int): number of queens. Must be >= 4
+    Return:
+        List of lists representing coordinates of each
+        queen for all possible solutions
+    """
+    cols = set()
+    pos_diag = set()
+    neg_diag = set()
+    board = [[0] * n for i in range(n)]
+
+    backtrack(0, n, cols, pos_diag, neg_diag, board)
+
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python filename.py N", file=sys.stderr)
+    n = sys.argv
+    if len(n) != 2:
+        print("Usage: nqueens N")
         sys.exit(1)
-
-    nqueens(sys.argv[1])
+    try:
+        nn = int(n[1])
+        if nn < 4:
+            print("N must be at least 4")
+            sys.exit(1)
+        nqueens(nn)
+    except ValueError:
+        print("N must be a number")
+        sys.exit(1)
