@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise).
+Given an n x n 2D matrix representing an image,
+rotate the image by 90 degrees (clockwise).
 """
 
 
