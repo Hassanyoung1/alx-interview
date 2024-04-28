@@ -2,12 +2,14 @@
 """
 Given an n x n 2D matrix representing an image,
 rotate the image by 90 degrees (clockwise).
+
 """
 
 
 def rotate_2d_matrix(matrix):
     """
     Rotate the image by 90 degrees (clockwise).
+
     args:
         matrix: n x n 2D matrix representing an image.
     """
